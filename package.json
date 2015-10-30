@@ -10,12 +10,25 @@
     "prestart": "npm run build",
     "build": "browserify $npm_package_main -t babelify -o ./dist/input-manager.js -s inputManager",
     "build:watch": "npm run build; onchange 'lib/**/*.js' -- npm run build",
-    "test": ""
+    "test": "karma start test/unit/config/karma.js --single-run"
   },
   "main": "./main.js",
   "devDependencies": {
     "babelify": "^6.1.2",
     "browserify": "^10.2.4",
-    "onchange": "^1.1.0"
+    "chai": "^2.0.0",
+    "chai-as-promised": "^4.1.1",
+    "karma": "0.12.37",
+    "karma-browserify": "4.3.0",
+    "karma-chai-sinon": "0.1.5",
+    "karma-es5-shim": "0.0.4",
+    "karma-mocha": "0.1.10",
+    "karma-mocha-reporter": "1.1.1",
+    "karma-phantomjs-launcher": "^0.2.0",
+    "mocha": "2.2.5",
+    "onchange": "^1.1.0",
+    "phantomjs": "~1.9.7-12",
+    "sinon": "1.16.1",
+    "sinon-chai": "2.8.0"
   }
 }
