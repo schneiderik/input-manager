@@ -1,6 +1,6 @@
 import History from './lib/history';
 import Subscriber from './lib/subscriber';
-import Inputs from './inputs.json';
+import keys from './keys.json';
 
 let InputManager;
 
@@ -31,7 +31,7 @@ window.addEventListener('keydown', function (event) {
   InputManger.history.record({
     altKey: event.altKey,
     ctrlKey: event.ctrlKey,
-    inputName: INPUTS[keyCode],
+    inputName: keys[keyCode],
     keyCode: event.keyCode,
     metaKey: event.metaKey,
     repeat: event.repeat,
@@ -47,7 +47,7 @@ window.addEventListener('keyup', function (event) {
   InputManger.history.record({
     altKey: event.altKey,
     ctrlKey: event.ctrlKey,
-    inputName: INPUTS[keyCode],
+    inputName: keys[keyCode],
     keyCode: event.keyCode,
     metaKey: event.metaKey,
     repeat: event.repeat,

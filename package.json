@@ -1,0 +1,21 @@
+{
+  "name": "input-manager",
+  "version": "0.0.1",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:schneiderik/input-manager.git"
+  },
+  "scripts": {
+    "start": "",
+    "prestart": "npm run build",
+    "build": "browserify $npm_package_main -t babelify -o ./dist/input-manager.js -s inputManager",
+    "build:watch": "npm run build; onchange 'lib/**/*.js' -- npm run build",
+    "test": ""
+  },
+  "main": "./main.js",
+  "devDependencies": {
+    "babelify": "^6.1.2",
+    "browserify": "^10.2.4",
+    "onchange": "^1.1.0"
+  }
+}
