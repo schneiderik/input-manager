@@ -55,7 +55,7 @@ class InputManager {
       let eventAttrs = {
         altKey: event.altKey,
         ctrlKey: event.ctrlKey,
-        inputName: 'MOUSE1',
+        inputName: 'MOUSE' + event.button,
         metaKey: event.metaKey,
         repeat: event.repeat,
         shiftKey: event.shiftKey,
@@ -77,14 +77,14 @@ class InputManager {
       let eventAttrs = {
         altKey: event.altKey,
         ctrlKey: event.ctrlKey,
-        inputName: 'MOUSE1',
+        inputName: 'MOUSE' + event.button,
         metaKey: event.metaKey,
         repeat: event.repeat,
         shiftKey: event.shiftKey,
         timeStamp: new Date(event.timestamp),
         x: event.x,
         y: event.y,
-        action: 'down'
+        action: 'up'
       };
 
       if (event.target.tagName === 'CANVAS') {

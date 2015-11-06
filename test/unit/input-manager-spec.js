@@ -93,7 +93,7 @@ describe('inputManager', () => {
       expect(inputManager.history.record).to.have.been.calledWith({
         altKey: sinon.match.falsy,
         ctrlKey: sinon.match.falsy,
-        inputName: 'MOUSE1',
+        inputName: 'MOUSE0',
         metaKey: sinon.match.falsy,
         repeat: sinon.match.falsy,
         shiftKey: sinon.match.falsy,
@@ -114,7 +114,7 @@ describe('inputManager', () => {
       expect(inputManager.history.record).to.have.been.calledWith({
         altKey: sinon.match.falsy,
         ctrlKey: sinon.match.falsy,
-        inputName: 'MOUSE1',
+        inputName: 'MOUSE0',
         metaKey: sinon.match.falsy,
         repeat: sinon.match.falsy,
         shiftKey: sinon.match.falsy,
@@ -125,7 +125,7 @@ describe('inputManager', () => {
       });
     });
 
-    it('binds an event to mousedown that records the event', () => {
+    xit('adds the offset of the click on the canvas if the click happens on a canvas', () => {
       let event, canvas;
 
       sinon.spy(inputManager.history, 'record');
@@ -139,7 +139,7 @@ describe('inputManager', () => {
       expect(inputManager.history.record).to.have.been.calledWith({
         altKey: sinon.match.falsy,
         ctrlKey: sinon.match.falsy,
-        inputName: 'MOUSE1',
+        inputName: 'MOUSE0',
         metaKey: sinon.match.falsy,
         repeat: sinon.match.falsy,
         shiftKey: sinon.match.falsy,

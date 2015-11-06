@@ -12,24 +12,52 @@ describe('History', () => {
   });
 
   describe('#record', () => {
-    it('adds a HistoryEvent to the event array', () => {
+    it('accepts a DOM Event and adds a HistoryEvent to the event array', () => {
       let history = new History();
       let domEvent = EventFactory.keyDown(13);
-      let historyEvent = new HistoryEvent(domEvent);
 
-      history.record(historyEvent);
+      history.record(domEvent);
 
       expect(history.events.length).to.equal(1);
       expect(history.events[0]).to.be.an.instanceOf(HistoryEvent);
     });
+  });
 
-    it('throws an error if anything besides a HistoryEvent is added', () => {
+  describe('#filter', ()=> {
+    it('returns a new instance of History that contains events that matched the key value pair provided', () => {
+      let filteredHistory;
       let history = new History();
-      let domEvent = EventFactory.keyDown(13);
 
-      expect(() => {
-        history.record(domEvent);
-      }).to.throw('Invalid argument. Must be a HistoryEvent');
+      history.record(EventFactory.keyDown(88));
+      history.record(EventFactory.keyDown(89));
+      history.record(EventFactory.keyDown(88));
+
+      filteredHistory = history.filter({inputAlias: 88});
+
+      expect(filteredHistory).to.not.equal(history);
+      expect(filteredHistory).to.be.an.instanceOf(History);
+      expect(history.events.length).to.equal(3);
+      expect(filteredHistory.events.length).to.equal(2);
+    });
+
+    it('is chainable', () => {
+      let filteredHistory;
+      let history = new History();
+
+      history.record(EventFactory.keyDown(88));
+      history.record(EventFactory.keyDown(89));
+      history.record(EventFactory.keyUp(88));
+
+      filteredHistory = history.filter({inputAlias: 88});
+
+      expect(filteredHistory).to.not.equal(history);
+      expect(filteredHistory).to.be.an.instanceOf(History);
+      expect(history.events.length).to.equal(3);
+      expect(filteredHistory.events.length).to.equal(2);
+
+      filteredHistory = history.filter({inputAlias: 88}).filter({action: 'up'});
+
+      expect(filteredHistory.events.length).to.equal(1);
     });
   });
 });

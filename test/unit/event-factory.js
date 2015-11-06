@@ -3,7 +3,7 @@ export default {
     let event;
 
     options = options || {};
-    event = new Event('keydown');
+    event = document.createEvent('Event');
 
     event.keyCode = key;
     event.timestamp = Date.now();
@@ -12,6 +12,7 @@ export default {
       event[key] = options[key] != null ? options[key] : false;
     });
 
+    event.initEvent('keydown');
     global.dispatchEvent(event);
 
     return event;
@@ -20,7 +21,7 @@ export default {
     let event;
 
     options = options || {};
-    event = new Event('keyup');
+    event = document.createEvent('Event');
 
     event.keyCode = key;
     event.timestamp = Date.now();
@@ -29,6 +30,7 @@ export default {
       event[key] = options[key] != null ? options[key] : false;
     });
 
+    event.initEvent('keyup');
     global.dispatchEvent(event);
 
     return event;
@@ -36,12 +38,13 @@ export default {
   mouseDown: function (element, options) {
     let event;
 
-    element = element || document.body;
+    element = element || global;
     options = options || {};
-    event = new Event('mousedown');
+    event = document.createEvent('Event');
 
     event.timestamp = Date.now();
     event.target = element;
+    event.button = options.button || 0;
 
     if (options.x) {
       event.offsetX = options.x;
@@ -55,19 +58,21 @@ export default {
       event[key] = options[key] != null ? options[key] : false;
     });
 
-    global.dispatchEvent(event);
+    event.initEvent('mousedown');
+    element.dispatchEvent(event);
 
     return event;
   },
   mouseUp: function (element, options) {
     let event;
 
-    element = element || document.body;
+    element = element || global;
     options = options || {};
-    event = new Event('mouseup');
+    event = document.createEvent('Event');
 
     event.timestamp = Date.now();
     event.target = element;
+    event.button = options.button || 0;
 
     if (options.x) {
       event.offsetX = options.x;
@@ -81,7 +86,8 @@ export default {
       event[key] = options[key] != null ? options[key] : false;
     });
 
-    global.dispatchEvent(event);
+    event.initEvent('mouseup');
+    element.dispatchEvent(event);
 
     return event;
   }
