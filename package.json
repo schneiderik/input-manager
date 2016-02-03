@@ -6,10 +6,10 @@
     "url": "git@github.com:schneiderik/input-manager.git"
   },
   "scripts": {
-    "start": "",
+    "start": "node app.js & npm run watch",
     "prestart": "npm run build",
-    "build": "browserify $npm_package_main -t babelify -o ./dist/input-manager.js -s inputManager",
-    "build:watch": "npm run build; onchange 'lib/**/*.js' -- npm run build",
+    "build": "browserify $npm_package_main -t babelify -o ./dist/input-manager.js -s InputManager",
+    "watch": "nodemon -e js -w lib -w main.js -x npm run build",
     "test": "karma start test/unit/config/karma.js --single-run"
   },
   "main": "./main.js",
@@ -26,7 +26,7 @@
     "karma-mocha-reporter": "1.1.1",
     "karma-phantomjs-launcher": "^0.2.0",
     "mocha": "2.2.5",
-    "onchange": "^1.1.0",
+    "nodemon": "^1.8.1",
     "phantomjs": "~1.9.7-12",
     "sinon": "1.16.1",
     "sinon-chai": "2.8.0"

@@ -1,0 +1,129 @@
+<html>
+  <head>
+    <title>Input Manager Test Page</title>
+  </head>
+  <body>
+    <script src="/js/input-manager.js"></script>
+    <script>
+      var callback = function (events) { console.log('Got it!', events); };
+
+      var inputManager = new InputManager();
+
+      var getPress = function (events, inputName) {
+        var upIndex;
+        var pressEvents = {};
+
+        events.reverse();
+
+        events.find(function (event, index) {
+          if (event.inputName === inputName && event.action === 'up') {
+            upIndex = index;
+            pressEvents.up = event;
+          }
+        });
+
+        events = events.slice(upIndex);
+
+        events.find(function (event, index) {
+          if (event.inputName === inputName && event.action === 'down') {
+            pressEvents.down = event;
+          }
+        });
+
+        events.reverse();
+
+        return pressEvents;
+      };
+
+      // press z then x then c in 500ms then v and b together then hold m for 500ms and press n all within 5000ms
+      var condition = function () {
+        var matchedEvents = [];
+        var nPressEvents, mHoldEvents;
+        var events = inputManager.history.events
+
+        // within 5 seconds
+        // filter down events to those that happened in the last 5 seconds
+        events = events.filter(function (event) {
+          var now = Date.now();
+
+          if (event.timeStamp > now - 5000) {
+            return event;
+          }
+        });
+
+        /* // Get the most recent N press events */
+        /* nPressEvents = getPress(events, 'N'); */
+
+        /* if (nPressEvents.up && nPressEvents.down) { */
+        /*   matchedEvents = matchedEvents.concat([nPressEvents.up, nPressEvents.down]); */
+        /* } else { */
+        /*   return []; */
+        /* } */
+
+        /* // Collect the most recent M hold events */
+        /* mHoldEvents = []; */
+
+        /* events.some(function (event, index) { */
+        /*   if (event.inputName === 'M' && event.action === 'up') { */
+        /*     return true; */
+        /*   } */
+
+        /*   if (event.inputName === 'M' && event.action === 'down') { */
+        /*     mHoldEvents.push(event); */
+        /*   } */
+
+        /*   return false; */
+        /* }); */
+
+        /* if (mHoldEvents.length) { */
+        /*   // If N was pushed down before M was held return */
+        /*   if (nPressEvents.down.timeStamp < mHoldEvents[mHoldEvents.length - 1].timeStamp) { */
+        /*     return []; */
+        /*   } */
+
+        /*   matchedEvents = matchedEvents.concat(mHoldEvents); */
+        /* } else { */
+        /*   return []; */
+        /* } */
+
+        vPressEvents = getPress(events, 'V');
+        bPressEvents = getPress(events, 'B');
+
+        console.log("HEY", vPressEvents, bPressEvents);
+
+        if (!vPressEvents.up || !vPressEvents.down || !bPressEvents.up || !bPressEvents.down) {
+          return [];
+        }
+
+        console.log("HEY");
+
+        // Check that press events happened within threshold of one another
+        if (Math.abs(vPressEvents.down.timeStamp - bPressEvents.down.timeStamp) <= 200 && Math.abs(vPressEvents.up.timeStamp - bPressEvents.up.timeStamp) <= 200) {
+          // Check that up press events happened before M is held
+          if (mHoldEvents[mHoldEvents.length - 1].timeStamp > vPressEvents.up.timeStamp && mHoldEvents[mHoldEvents.length - 1].timeStamp > bPressEvents.up.timeStamp) {
+            matchedEvents = matchedEvents.concat([vPressEvents.up, vPressEvents.down, bPressEvents.up, bPressEvents.down]);
+          } else {
+            return [];
+          }
+        } else {
+          return [];
+        }
+
+        // Sort the collected events by their index
+        return matchedEvents.sort(function (a, b) {
+          if (a.index > b.index) {
+            return -1;
+          }
+
+          if (a.index < b.index) {
+            return 1;
+          }
+
+          return 0;
+        });
+      };
+
+      var subscriber = inputManager.createSubscriber(condition, callback);
+    </script>
+  </body>
+</html>

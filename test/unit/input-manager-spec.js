@@ -22,23 +22,21 @@ describe('inputManager', () => {
     });
   });
 
-  describe('#on', () => {
-    it('creates a new Subscriber for the input provided, and returns it', () => {
-      let subscriber = inputManager.on('X');
+  describe('#down', () => {
+    it('creates a new Subscriber, and returns it', () => {
+      let subscriber = inputManager.down('X');
 
       expect(subscriber).to.be.an.instanceOf(Subscriber);
-      expect(subscriber.inputName).to.equal('X');
     });
 
-    it('creates a new Subscriber for the input provided, and adds it to its subscribers array', () => {
+    it('creates a new Subscriber, and adds it to its subscribers array', () => {
       let subscriber;
 
-      inputManager.on('Y');
+      inputManager.down('Y');
 
       subscriber = inputManager.subscribers[0];
 
       expect(subscriber).to.be.an.instanceOf(Subscriber);
-      expect(subscriber.inputName).to.equal('Y');
     });
   });
 

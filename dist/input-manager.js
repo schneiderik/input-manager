@@ -1,4 +1,4 @@
-(function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.inputManager = f()}})(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+(function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.InputManager = f()}})(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 module.exports={
   8: "BACKSPACE",
   9: "TAB",
@@ -91,52 +91,6 @@ module.exports={
 }
 
 },{}],2:[function(require,module,exports){
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var History = (function () {
-  function History(events) {
-    _classCallCheck(this, History);
-
-    this.events = events || [];
-  }
-
-  _createClass(History, [{
-    key: "record",
-    value: function record(event) {
-      this.events.unshift(event);
-
-      return event;
-    }
-  }, {
-    key: "filter",
-    value: function filter(filters) {
-      filteredHistory = this.events.filter(function (event) {
-        var prop = undefined;
-
-        for (prop in filters) {
-          return filters[prop] === event[prop];
-        }
-      });
-
-      return new History(filteredHistory);
-    }
-  }]);
-
-  return History;
-})();
-
-exports["default"] = History;
-module.exports = exports["default"];
-
-},{}],3:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -149,60 +103,37 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'd
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-var _timedEvent = require('./timed-event');
+var _keysJson = require('../keys.json');
 
-var _timedEvent2 = _interopRequireDefault(_timedEvent);
+var _keysJson2 = _interopRequireDefault(_keysJson);
 
-var Subscriber = (function () {
-  function Subscriber() {
-    _classCallCheck(this, Subscriber);
+var History = (function () {
+  function History(events) {
+    _classCallCheck(this, History);
+
+    this.events = events || [];
+    this.eventCounter = 0;
   }
 
-  _createClass(Subscriber, [{
-    key: 'constuctor',
-    value: function constuctor(inputName) {
-      this.inputName = inputName;
-      this.conditions = [];
+  _createClass(History, [{
+    key: 'record',
+    value: function record(event) {
+      event.index = this.eventCounter;
+      this.events.unshift(event);
 
-      return this;
-    }
-  }, {
-    key: 'trigger',
-    value: function trigger(callback) {
-      this.callback = callback;
+      this.eventCounter++;
 
-      return this;
-    }
-  }, {
-    key: 'occurence',
-    value: function occurence(count) {
-      conditions.push('occurence');
-    }
-  }, {
-    key: 'evaluate',
-    value: function evaluate() {
-      var i = undefined,
-          conditionName = undefined;
-
-      for (i = 0; i < this.conditions.length; i++) {
-        conditionName = this.conditions[i];
-
-        if (!this['check' + conditionName]()) {
-          return false;
-        }
-      }
-
-      this.callback();
+      return event;
     }
   }]);
 
-  return Subscriber;
+  return History;
 })();
 
-exports['default'] = Subscriber;
+exports['default'] = History;
 module.exports = exports['default'];
 
-},{"./timed-event":4}],4:[function(require,module,exports){
+},{"../keys.json":1}],3:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -213,39 +144,45 @@ var _createClass = (function () { function defineProperties(target, props) { for
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var TimedEvent = (function () {
-  function TimedEvent(subscriber, name) {
-    _classCallCheck(this, TimedEvent);
+var Subscriber = (function () {
+  function Subscriber(condition, callback) {
+    _classCallCheck(this, Subscriber);
 
-    this.subscriber = subscriber;
-    this.name = name;
+    this.callback = callback;
+    this.condition = condition;
 
     return this;
   }
 
-  _createClass(TimedEvent, [{
-    key: "within",
-    value: function within(ms) {
-      this.subscriber[this.name].timeLimit = ms;
+  _createClass(Subscriber, [{
+    key: "evaluate",
+    value: function evaluate() {
+      var events = this.condition();
 
-      return this.subscriber;
+      if (events.length) {
+        this.callback(events);
+      }
     }
   }]);
 
-  return TimedEvent;
+  return Subscriber;
 })();
 
-exports["default"] = TimedEvent;
+exports["default"] = Subscriber;
 module.exports = exports["default"];
 
-},{}],5:[function(require,module,exports){
+},{}],4:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
   value: true
 });
 
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
 var _libHistory = require('./lib/history');
 
@@ -259,63 +196,131 @@ var _keysJson = require('./keys.json');
 
 var _keysJson2 = _interopRequireDefault(_keysJson);
 
-var InputManager = undefined;
+var InputManager = (function () {
+  function InputManager() {
+    _classCallCheck(this, InputManager);
 
-function on(inputName) {
-  var subscriber = new _libSubscriber2['default'](inputName);
+    this.Subscriber = _libSubscriber2['default'];
+    this.subscribers = [];
+    this.history = new _libHistory2['default']();
 
-  this.subscribers.push(subscriber);
+    this.bindEvents();
+  }
 
-  return subscriber;
-}
+  _createClass(InputManager, [{
+    key: 'evaluateSubscribers',
+    value: function evaluateSubscribers() {
+      this.subscribers.forEach(function (subscriber) {
+        subscriber.evaluate();
+      });
+    }
+  }, {
+    key: 'createSubscriber',
+    value: function createSubscriber(condition, callback) {
+      var subscriber = new _libSubscriber2['default'](condition, callback);
 
-function evaluateSubscribers() {
-  this.subscribers.forEach(function (subscriber) {
-    subscriber.evaluate();
-  });
-}
+      this.subscribers.push(subscriber);
 
-InputManager = {
-  subscribers: [],
-  history: new _libHistory2['default'](),
-  on: on,
-  evaluateSubscribers: evaluateSubscribers
-};
+      return subscriber;
+    }
+  }, {
+    key: 'bindEvents',
+    value: function bindEvents() {
+      var _this = this;
 
-window.addEventListener('keydown', function (event) {
-  var keyCode = event.keyCode || event.key;
+      window.addEventListener('keydown', function (event) {
+        var keyCode = event.keyCode || event.key;
 
-  InputManger.history.record({
-    altKey: event.altKey,
-    ctrlKey: event.ctrlKey,
-    inputName: _keysJson2['default'][keyCode],
-    keyCode: event.keyCode,
-    metaKey: event.metaKey,
-    repeat: event.repeat,
-    shiftKey: event.shiftKey,
-    timeStamp: new Date(event.timestamp),
-    direction: 'down'
-  });
-});
+        _this.history.record({
+          altKey: event.altKey,
+          ctrlKey: event.ctrlKey,
+          inputName: _keysJson2['default'][keyCode],
+          inputAlias: keyCode,
+          metaKey: event.metaKey,
+          repeat: event.repeat,
+          shiftKey: event.shiftKey,
+          timeStamp: new Date(event.timeStamp),
+          type: event.type,
+          action: 'down'
+        });
 
-window.addEventListener('keyup', function (event) {
-  var keyCode = event.keyCode || event.key;
+        _this.evaluateSubscribers();
+      });
 
-  InputManger.history.record({
-    altKey: event.altKey,
-    ctrlKey: event.ctrlKey,
-    inputName: _keysJson2['default'][keyCode],
-    keyCode: event.keyCode,
-    metaKey: event.metaKey,
-    repeat: event.repeat,
-    shiftKey: event.shiftKey,
-    timeStamp: new Date(event.timestamp),
-    direction: 'up'
-  });
-});
+      window.addEventListener('keyup', function (event) {
+        var keyCode = event.keyCode || event.key;
+
+        _this.history.record({
+          altKey: event.altKey,
+          ctrlKey: event.ctrlKey,
+          inputName: _keysJson2['default'][keyCode],
+          inputAlias: keyCode,
+          metaKey: event.metaKey,
+          repeat: event.repeat,
+          shiftKey: event.shiftKey,
+          timeStamp: new Date(event.timeStamp),
+          type: event.type,
+          action: 'up'
+        });
+
+        _this.evaluateSubscribers();
+      });
+
+      window.addEventListener('mousedown', function (event) {
+        var eventAttrs = {
+          altKey: event.altKey,
+          ctrlKey: event.ctrlKey,
+          inputName: 'MOUSE' + event.button,
+          metaKey: event.metaKey,
+          shiftKey: event.shiftKey,
+          timeStamp: new Date(event.timeStamp),
+          x: event.x,
+          y: event.y,
+          type: event.type,
+          action: 'down'
+        };
+
+        if (event.target && event.target.tagName === 'CANVAS') {
+          eventAttrs.canvasX = event.offsetX;
+          eventAttrs.canvasY = event.offsetY;
+        }
+
+        _this.history.record(eventAttrs);
+
+        _this.evaluateSubscribers();
+      });
+
+      window.addEventListener('mouseup', function (event) {
+        var eventAttrs = {
+          altKey: event.altKey,
+          ctrlKey: event.ctrlKey,
+          inputName: 'MOUSE' + event.button,
+          metaKey: event.metaKey,
+          shiftKey: event.shiftKey,
+          timeStamp: new Date(event.timeStamp),
+          x: event.x,
+          y: event.y,
+          type: event.type,
+          action: 'up'
+        };
+
+        if (event.target && event.target.tagName === 'CANVAS') {
+          eventAttrs.canvasX = event.offsetX;
+          eventAttrs.canvasY = event.offsetY;
+        }
+
+        _this.history.record(eventAttrs);
+
+        _this.evaluateSubscribers();
+      });
+    }
+  }]);
+
+  return InputManager;
+})();
 
 exports['default'] = InputManager;
 module.exports = exports['default'];
 
-},{"./keys.json":1,"./lib/history":2,"./lib/subscriber":3}]},{},[5])(5)
+},{"./keys.json":1,"./lib/history":2,"./lib/subscriber":3}]},{},[4])(4)
 });
