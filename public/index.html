@@ -5,173 +5,68 @@
   <body>
     <script src="/js/input-manager.js"></script>
     <script>
-      var callback = function (events) { console.log('Got it!', events); };
+      var inputManager = new InputManager;
+      var conditions = InputManager.conditions;
 
-      var inputManager = new InputManager();
+      var crazyCondition = new conditions.Sequence([
+        new conditions.Sequence([
+          new conditions.Press('Z'),
+          new conditions.Press('X'),
+          new conditions.Press('C')
+        ], {
+          within: 2000
+        }),
+        new conditions.Simultaneous([
+          new conditions.Press('V'),
+          new conditions.Press('B')
+        ], {
+          threshold: 50
+        }),
+        new conditions.Hold('M', 500),
+        new conditions.Holding('M', new conditions.Press('N'))
+      ], {
+        within: 5000
+      });
 
-      var within = function (events, duration) {
-        return events.filter(function (event) {
-          if (event.timeStamp > Date.now() - duration) {
-            return event;
-          }
-        });
+      var konamiCondition = new conditions.Sequence([
+        new conditions.Press('UP'),
+        new conditions.Press('UP'),
+        new conditions.Press('DOWN'),
+        new conditions.Press('DOWN'),
+        new conditions.Press('LEFT'),
+        new conditions.Press('RIGHT'),
+        new conditions.Press('LEFT'),
+        new conditions.Press('RIGHT'),
+        new conditions.Press('A'),
+        new conditions.Press('B'),
+        new conditions.Press('ENTER')
+      ], {
+        within: 7000
+      });
+
+      var upperCutCondition = new conditions.Sequence([
+        new conditions.Holding('DOWN', new conditions.Down('LEFT')),
+        new conditions.Holding('LEFT', new conditions.up('DOWN')),
+        new conditions.Press('A')
+      ], {
+        within: 1500
+      });
+
+      var crazyCallback = function () {
+        console.log('GOT IT!', events);
       };
 
-      var before = function (events, timestamp) {
-        return events.filter(function (event) {
-          if (event.timeStamp < timestamp) {
-            return event;
-          }
-        });
+      var konamiCallback = function () {
+        console.log('INFINITE LIVES!', events);
       };
 
-      var getHoldEvents = function (events, inputName) {
-        var holdEvents = [];
-
-        events.some(function (event, index) {
-          if (event.inputName === inputName && event.action === 'up') {
-            return true;
-          }
-
-          if (event.inputName === inputName && event.action === 'down') {
-            holdEvents.push(event);
-          }
-
-          return false;
-        });
-
-        return holdEvents;
+      var uppserCutCallback = function () {
+        console.log('UPPER CUT!', events);
       };
 
-      var getPressEvents = function (events, inputName) {
-        var upIndex;
-        var pressEvents = {};
-
-        pressEvents.up = events.find(function (event, index) {
-          if (event.inputName === inputName && event.action === 'down') {
-            pressEvents.down = event;
-          }
-
-          if (event.inputName === inputName && event.action === 'up') {
-            upIndex = index;
-            return event;
-          }
-        });
-
-        if (pressEvents.down && !pressEvents.up) {
-          return pressEvents;
-        }
-
-        scopedEvents = events.slice(upIndex + 1);
-
-        pressEvents.down = scopedEvents.find(function (event, index) {
-          if (event.inputName === inputName && event.action === 'down') {
-            return event;
-          }
-        });
-
-        return pressEvents;
-      };
-
-      // press z then x then c in 500ms then v and b together then hold m for 500ms and press n all within 5000ms
-      var condition = function () {
-        var matchedEvents = [];
-        var nPressEvents, mHoldEvents, vPressEvents, bPressEvents, cPressEvents, xPressEvents, zPressEvents;
-        var events = inputManager.history.events
-
-        // within 5 seconds
-        // filter down events to those that happened in the last 2 seconds
-        events = within(events, 5000);
-
-        // Get the most recent N press events
-        nPressEvents = getPressEvents(events, 'N');
-
-        // Collect the most recent M hold events
-        mHoldEvents = getHoldEvents(events, 'M');
-
-        if (nPressEvents.up && nPressEvents.down) {
-          matchedEvents = matchedEvents.concat(nPressEvents.values);
-        } else {
-          return [];
-        }
-
-        if (mHoldEvents.length) {
-          // If N was pushed down before M was held retur
-          if (nPressEvents.down.timeStamp < mHoldEvents[mHoldEvents.length - 1].timeStamp) {
-            return [];
-          }
-
-          // If M was held down for less than 500ms before N was pressed
-          if (nPressEvents.down.timeStamp - mHoldEvents[mHoldEvents.length - 1].timeStamp < 500) {
-            return [];
-          }
-
-          matchedEvents = matchedEvents.concat(mHoldEvents);
-        } else {
-          return [];
-        }
-
-        events = before(events, mHoldEvents[mHoldEvents.length - 1].timeStamp);
-
-        vPressEvents = getPressEvents(events, 'V');
-        bPressEvents = getPressEvents(events, 'B');
-
-        if (vPressEvents.up && vPressEvents.down && bPressEvents.up && bPressEvents.down) {
-          // Check that press events happened within threshold of one another
-          if (Math.abs(vPressEvents.down.timeStamp - bPressEvents.down.timeStamp) <= 50 && Math.abs(vPressEvents.up.timeStamp - bPressEvents.up.timeStamp) <= 50) {
-            matchedEvents = matchedEvents.concat([vPressEvents.up, vPressEvents.down, bPressEvents.up, bPressEvents.down]);
-          } else {
-            return [];
-          }
-        } else {
-          return [];
-        }
-
-        events = before(events, Math.min(vPressEvents.down.timeStamp, bPressEvents.down.timeStamp));
-
-        cPressEvents = getPressEvents(events, 'C');
-
-        if (cPressEvents.up && cPressEvents.down) {
-          matchedEvents = matchedEvents.concat(cPressEvents.values);
-        } else {
-          return [];
-        }
-
-        events = before(events, cPressEvents.down.timeStamp);
-
-        xPressEvents = getPressEvents(events, 'X');
-
-        if (xPressEvents.up && xPressEvents.down) {
-          matchedEvents = matchedEvents.concat(xPressEvents.values);
-        } else {
-          return [];
-        }
-
-        events = before(events, xPressEvents.down.timeStamp);
-
-        zPressEvents = getPressEvents(events, 'Z');
-
-        if (zPressEvents.up && zPressEvents.down) {
-          matchedEvents = matchedEvents.concat(zPressEvents.values);
-        } else {
-          return [];
-        }
-
-        // Sort the collected events by their index
-        return matchedEvents.sort(function (a, b) {
-          if (a.index > b.index) {
-            return -1;
-          }
-
-          if (a.index < b.index) {
-            return 1;
-          }
-
-          return 0;
-        });
-      };
-
-      var subscriber = inputManager.createSubscriber(condition, callback);
+      var crazySequence = inputManager.createSubscriber(crazyCondition, crazyCallback);
+      var konamiCode = inputManager.createSubscriber(konamiCondition, konamiCallback);
+      var upperCut = inputManager.createSubscriber(upperCutCondition, upperCutCallback);
     </script>
   </body>
 </html>

@@ -148,20 +148,35 @@ var Subscriber = (function () {
   function Subscriber(condition, callback) {
     _classCallCheck(this, Subscriber);
 
-    this.callback = callback;
     this.condition = condition;
-
-    return this;
+    this.callback = callback;
   }
 
   _createClass(Subscriber, [{
     key: "evaluate",
     value: function evaluate() {
-      var events = this.condition();
+      var matchedEvents = this.condition.evaluate();
 
-      if (events.length) {
-        this.callback(events);
+      matchedEvents = this.sortEventByIndex(matchedEvents);
+
+      if (this.condition.isValid) {
+        this.callback(matchedEvents);
       }
+    }
+  }, {
+    key: "sortEventsByIndex",
+    value: function sortEventsByIndex(events) {
+      return events.sort(function (a, b) {
+        if (a.index > b.index) {
+          return -1;
+        }
+
+        if (a.index < b.index) {
+          return 1;
+        }
+
+        return 0;
+      });
     }
   }]);
 
