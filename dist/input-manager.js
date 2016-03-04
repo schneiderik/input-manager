@@ -91,6 +91,619 @@ module.exports={
 }
 
 },{}],2:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Condition = (function () {
+  function Condition() {
+    _classCallCheck(this, Condition);
+
+    this.isValid = false;
+    this.firstEvent = null;
+    this.lastEvent = null;
+  }
+
+  _createClass(Condition, [{
+    key: "within",
+    value: function within(events, duration) {
+      return events.filter(function (event) {
+        if (event.timeStamp > Date.now() - duration) {
+          return event;
+        }
+      });
+    }
+  }, {
+    key: "getEventsBefore",
+    value: function getEventsBefore(events, timestamp) {
+      return events.filter(function (event) {
+        if (event.timeStamp < timestamp) {
+          return event;
+        }
+      });
+    }
+  }]);
+
+  return Condition;
+})();
+
+exports["default"] = Condition;
+module.exports = exports["default"];
+
+},{}],3:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var _condition = require('../condition');
+
+var _condition2 = _interopRequireDefault(_condition);
+
+var Down = (function (_Condition) {
+  _inherits(Down, _Condition);
+
+  function Down(inputName) {
+    _classCallCheck(this, Down);
+
+    _get(Object.getPrototypeOf(Down.prototype), 'constructor', this).call(this);
+
+    this.inputName = inputName;
+  }
+
+  _createClass(Down, [{
+    key: 'evaluate',
+    value: function evaluate(events) {
+      var _this = this;
+
+      this.matchedEvents = [];
+      this.isValid = false;
+
+      var event = events.find(function (event, index) {
+        if (event.inputName === _this.inputName && event.action === 'down') {
+          return event;
+        }
+      });
+
+      if (event) {
+        this.firstEvent = event;
+        this.lastEvent = event;
+        this.matchedEvents.push(event);
+        this.isValid = true;
+      }
+
+      return this.isValid;
+    }
+  }]);
+
+  return Down;
+})(_condition2['default']);
+
+exports['default'] = Down;
+module.exports = exports['default'];
+
+},{"../condition":2}],4:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+
+var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var _condition = require('../condition');
+
+var _condition2 = _interopRequireDefault(_condition);
+
+var Hold = (function (_Condition) {
+  _inherits(Hold, _Condition);
+
+  function Hold() {
+    _classCallCheck(this, Hold);
+
+    _get(Object.getPrototypeOf(Hold.prototype), 'constructor', this).apply(this, arguments);
+  }
+
+  return Hold;
+})(_condition2['default']);
+
+exports['default'] = Hold;
+module.exports = exports['default'];
+
+},{"../condition":2}],5:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var _condition = require('../condition');
+
+var _condition2 = _interopRequireDefault(_condition);
+
+var Holding = (function (_Condition) {
+  _inherits(Holding, _Condition);
+
+  function Holding(inputName, condition) {
+    _classCallCheck(this, Holding);
+
+    _get(Object.getPrototypeOf(Holding.prototype), 'constructor', this).call(this);
+
+    this.inputName = inputName;
+    this.condition = condition;
+  }
+
+  _createClass(Holding, [{
+    key: 'evaluate',
+    value: function evaluate(events) {
+      this.isValid = false;
+
+      var holdEvents = this.getEvents(events);
+
+      this.condition.evaluate(events);
+
+      if (holdEvents.length && this.condition.matchedEvents.length && this.condition.firstEvent.timeStamp > holdEvents[0].timeStamp) {
+        this.firstEvent = holdEvents[0];
+        this.lastEvent = this.condition.lastEvent;
+        this.matchedEvents = holdEvents + conditionEvents;
+        this.isValid = true;
+      }
+
+      return this.isValid;
+    }
+  }, {
+    key: 'getEvents',
+    value: function getEvents(events) {
+      var _this = this;
+
+      var holdEvents = [];
+
+      events.some(function (event, index) {
+        if (event.inputName === _this.inputName && event.action === 'up') {
+          return true;
+        }
+
+        if (event.inputName === _this.inputName && event.action === 'down') {
+          holdEvents.push(event);
+        }
+
+        return false;
+      });
+
+      return holdEvents;
+    }
+  }]);
+
+  return Holding;
+})(_condition2['default']);
+
+exports['default'] = Holding;
+module.exports = exports['default'];
+
+},{"../condition":2}],6:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var _condition = require('../condition');
+
+var _condition2 = _interopRequireDefault(_condition);
+
+var Press = (function (_Condition) {
+  _inherits(Press, _Condition);
+
+  function Press(inputName) {
+    _classCallCheck(this, Press);
+
+    _get(Object.getPrototypeOf(Press.prototype), 'constructor', this).call(this);
+
+    this.inputName = inputName;
+  }
+
+  _createClass(Press, [{
+    key: 'evaluate',
+    value: function evaluate(events) {
+      var pressEvents = this.getEvents(events);
+
+      if (pressEvents.up && pressEvents.down) {
+        this.firstEvent = pressEvents.down;
+        this.lastEvent = pressEvents.up;
+        this.matchedEvents = [pressEvents.down, pressEvents.up];
+        this.isValid = true;
+      } else {
+        this.isValid = false;
+      }
+
+      return this.isValid;
+    }
+  }, {
+    key: 'getEvents',
+    value: function getEvents(events) {
+      var _this = this;
+
+      var upIndex = undefined,
+          scopedEvents = undefined;
+      var pressEvents = {};
+
+      if (events[0].inputName === this.inputName && events[0].action === 'up') {
+        pressEvents.up = events[0];
+      }
+
+      if (!pressEvents.up) {
+        return pressEvents;
+      }
+
+      scopedEvents = this.getEventsBefore(events, pressEvents.up.timeStamp);
+
+      pressEvents.down = scopedEvents.find(function (event) {
+        if (event.inputName === _this.inputName && event.action === 'down') {
+          return event;
+        }
+      });
+
+      return pressEvents;
+    }
+  }]);
+
+  return Press;
+})(_condition2['default']);
+
+exports['default'] = Press;
+module.exports = exports['default'];
+
+},{"../condition":2}],7:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var _condition = require('../condition');
+
+var _condition2 = _interopRequireDefault(_condition);
+
+var Sequence = (function (_Condition) {
+  _inherits(Sequence, _Condition);
+
+  function Sequence(conditions, options) {
+    _classCallCheck(this, Sequence);
+
+    _get(Object.getPrototypeOf(Sequence.prototype), 'constructor', this).call(this);
+
+    this.conditions = conditions.reverse();
+    this.options = options || {};
+  }
+
+  _createClass(Sequence, [{
+    key: 'evaluate',
+    value: function evaluate(events) {
+      var i = 0;
+
+      this.matchedEvents = [];
+
+      function checkConditionInSequence(condition, e) {
+        if (condition.evaluate(e)) {
+          this.matchedEvents.concat(condition.matchedEvents);
+
+          if (i === 0) {
+            this.lastEvent = condition.lastEvent;
+          }
+
+          i++;
+
+          if (i === this.conditions.length) {
+            this.firstEvent = condition.firstEvent;
+
+            // Check that sequence was performed within time limit
+            if (this.options.within && this.lastEvent.timeStamp - this.firstEvent.timeStamp > this.options.within) {
+              this.isValid = false;
+              return;
+            }
+
+            this.isValid = true;
+          } else {
+            checkConditionInSequence.call(this, this.conditions[i], this.getEventsBefore(e, condition.firstEvent.timeStamp));
+          }
+        } else {
+          this.isValid = false;
+          return;
+        }
+      }
+
+      checkConditionInSequence.call(this, this.conditions[i], events);
+
+      console.log('SEQUENCE VALID', this.isValid);
+
+      return this.isValid;
+    }
+  }]);
+
+  return Sequence;
+})(_condition2['default']);
+
+exports['default'] = Sequence;
+module.exports = exports['default'];
+
+},{"../condition":2}],8:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var _condition = require('../condition');
+
+var _condition2 = _interopRequireDefault(_condition);
+
+var Simultaneous = (function (_Condition) {
+  _inherits(Simultaneous, _Condition);
+
+  function Simultaneous(conditions, options) {
+    _classCallCheck(this, Simultaneous);
+
+    _get(Object.getPrototypeOf(Simultaneous.prototype), 'constructor', this).call(this);
+
+    this.conditions = conditions;
+    this.options = options || {};
+  }
+
+  _createClass(Simultaneous, [{
+    key: 'evaluate',
+    value: function evaluate(events) {
+      var allConditionsValid = true;
+      this.matchedEvents = [];
+
+      this.conditions.forEach(function (condition) {
+        var valid = condition.evaluate(events);
+
+        if (!valid) {
+          allConditionsValid = false;
+        }
+      });
+
+      console.log(this.conditions, allConditionsValid);
+
+      if (!allConditionsValid) {
+        this.isValid = false;
+        return this.isValid;
+      }
+
+      var downEvents = this.getDownEvents();
+      var upEvents = this.getUpEvents();
+
+      if (downEvents.length) {
+        if (this.isWithinThreshold(downEvents)) {
+          this.matchedEvents.concat(downEvents);
+        } else {
+          this.isValid = false;
+          return this.isValid;
+        }
+      }
+
+      if (upEvents.length) {
+        if (this.isWithinThreshold(upEvents)) {
+          this.matchedEvents.concat(upEvents);
+        } else {
+          this.isValid = false;
+          return this.isValid;
+        }
+      }
+
+      this.firstEvent = downEvents[0] || upEvents[0];
+      this.lastEvent = upEvents[upEvents.length - 1] || downEvents[downEvents.length - 1];
+      this.isValid = true;
+      return this.isValid;
+    }
+  }, {
+    key: 'getDownEvents',
+    value: function getDownEvents() {
+      return this.sortEventsByIndex(this.conditions.map(function (condition) {
+        console.log(condition);
+        if (condition.firstEvent.action === 'down') {
+          return condition.firstEvent;
+        }
+      }));
+    }
+  }, {
+    key: 'getUpEvents',
+    value: function getUpEvents() {
+      return this.sortEventsByIndex(this.conditions.map(function (condition) {
+        if (condition.lastEvent.action === 'up') {
+          return condition.lastEvent;
+        }
+      }));
+    }
+  }, {
+    key: 'sortEventsByIndex',
+    value: function sortEventsByIndex(events) {
+      events.sort(function (a, b) {
+        if (a.index > b.index) {
+          return -1;
+        }
+
+        if (a.index < b.index) {
+          return 1;
+        }
+
+        return 0;
+      });
+    }
+  }, {
+    key: 'isWithinThreshold',
+    value: function isWithinThreshold(events) {
+      return Math.abs(events[events.length - 1] - events[0].timeStamp) <= this.options.threshold;
+    }
+  }]);
+
+  return Simultaneous;
+})(_condition2['default']);
+
+exports['default'] = Simultaneous;
+module.exports = exports['default'];
+
+},{"../condition":2}],9:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var _condition = require('../condition');
+
+var _condition2 = _interopRequireDefault(_condition);
+
+var Up = (function (_Condition) {
+  _inherits(Up, _Condition);
+
+  function Up(inputName) {
+    _classCallCheck(this, Up);
+
+    _get(Object.getPrototypeOf(Up.prototype), 'constructor', this).call(this);
+
+    this.inputName = inputName;
+  }
+
+  _createClass(Up, [{
+    key: 'evaluate',
+    value: function evaluate(events) {
+      var _this = this;
+
+      this.matchedEvents = [];
+      this.isValid = false;
+
+      var event = events.find(function (event, index) {
+        if (event.inputName === _this.inputName && event.action === 'up') {
+          return event;
+        }
+      });
+
+      if (event) {
+        this.firstEvent = event;
+        this.lastEvent = event;
+        this.matchedEvents.push(event);
+        this.isValid = true;
+      }
+
+      return this.isValid;
+    }
+  }]);
+
+  return Up;
+})(_condition2['default']);
+
+exports['default'] = Up;
+module.exports = exports['default'];
+
+},{"../condition":2}],10:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+
+var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var _condition = require('../condition');
+
+var _condition2 = _interopRequireDefault(_condition);
+
+var Wait = (function (_Condition) {
+  _inherits(Wait, _Condition);
+
+  function Wait() {
+    _classCallCheck(this, Wait);
+
+    _get(Object.getPrototypeOf(Wait.prototype), 'constructor', this).apply(this, arguments);
+  }
+
+  return Wait;
+})(_condition2['default']);
+
+exports['default'] = Wait;
+module.exports = exports['default'];
+
+},{"../condition":2}],11:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -119,6 +732,11 @@ var History = (function () {
     key: 'record',
     value: function record(event) {
       event.index = this.eventCounter;
+
+      if (this.eventCounter > 99) {
+        this.events.pop();
+      }
+
       this.events.unshift(event);
 
       this.eventCounter++;
@@ -133,16 +751,16 @@ var History = (function () {
 exports['default'] = History;
 module.exports = exports['default'];
 
-},{"../keys.json":1}],3:[function(require,module,exports){
-"use strict";
+},{"../keys.json":1}],12:[function(require,module,exports){
+'use strict';
 
-Object.defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, '__esModule', {
   value: true
 });
 
-var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
 var Subscriber = (function () {
   function Subscriber(condition, callback) {
@@ -153,18 +771,16 @@ var Subscriber = (function () {
   }
 
   _createClass(Subscriber, [{
-    key: "evaluate",
-    value: function evaluate() {
-      var matchedEvents = this.condition.evaluate();
+    key: 'evaluate',
+    value: function evaluate(events) {
+      if (this.condition.evaluate(events)) {
+        console.log('SUBSCRIBER VALID', this.condition.isValid);
 
-      matchedEvents = this.sortEventByIndex(matchedEvents);
-
-      if (this.condition.isValid) {
-        this.callback(matchedEvents);
+        this.callback(this.sortEventsByIndex(this.condition.matchedEvents));
       }
     }
   }, {
-    key: "sortEventsByIndex",
+    key: 'sortEventsByIndex',
     value: function sortEventsByIndex(events) {
       return events.sort(function (a, b) {
         if (a.index > b.index) {
@@ -183,10 +799,10 @@ var Subscriber = (function () {
   return Subscriber;
 })();
 
-exports["default"] = Subscriber;
-module.exports = exports["default"];
+exports['default'] = Subscriber;
+module.exports = exports['default'];
 
-},{}],4:[function(require,module,exports){
+},{}],13:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -211,6 +827,38 @@ var _keysJson = require('./keys.json');
 
 var _keysJson2 = _interopRequireDefault(_keysJson);
 
+var _libConditionsSequence = require('./lib/conditions/sequence');
+
+var _libConditionsSequence2 = _interopRequireDefault(_libConditionsSequence);
+
+var _libConditionsDown = require('./lib/conditions/down');
+
+var _libConditionsDown2 = _interopRequireDefault(_libConditionsDown);
+
+var _libConditionsUp = require('./lib/conditions/up');
+
+var _libConditionsUp2 = _interopRequireDefault(_libConditionsUp);
+
+var _libConditionsPress = require('./lib/conditions/press');
+
+var _libConditionsPress2 = _interopRequireDefault(_libConditionsPress);
+
+var _libConditionsHold = require('./lib/conditions/hold');
+
+var _libConditionsHold2 = _interopRequireDefault(_libConditionsHold);
+
+var _libConditionsHolding = require('./lib/conditions/holding');
+
+var _libConditionsHolding2 = _interopRequireDefault(_libConditionsHolding);
+
+var _libConditionsSimultaneous = require('./lib/conditions/simultaneous');
+
+var _libConditionsSimultaneous2 = _interopRequireDefault(_libConditionsSimultaneous);
+
+var _libConditionsWait = require('./lib/conditions/wait');
+
+var _libConditionsWait2 = _interopRequireDefault(_libConditionsWait);
+
 var InputManager = (function () {
   function InputManager() {
     _classCallCheck(this, InputManager);
@@ -225,8 +873,10 @@ var InputManager = (function () {
   _createClass(InputManager, [{
     key: 'evaluateSubscribers',
     value: function evaluateSubscribers() {
+      var _this = this;
+
       this.subscribers.forEach(function (subscriber) {
-        subscriber.evaluate();
+        subscriber.evaluate(_this.history.events);
       });
     }
   }, {
@@ -241,12 +891,12 @@ var InputManager = (function () {
   }, {
     key: 'bindEvents',
     value: function bindEvents() {
-      var _this = this;
+      var _this2 = this;
 
       window.addEventListener('keydown', function (event) {
         var keyCode = event.keyCode || event.key;
 
-        _this.history.record({
+        _this2.history.record({
           altKey: event.altKey,
           ctrlKey: event.ctrlKey,
           inputName: _keysJson2['default'][keyCode],
@@ -259,13 +909,13 @@ var InputManager = (function () {
           action: 'down'
         });
 
-        _this.evaluateSubscribers();
+        _this2.evaluateSubscribers();
       });
 
       window.addEventListener('keyup', function (event) {
         var keyCode = event.keyCode || event.key;
 
-        _this.history.record({
+        _this2.history.record({
           altKey: event.altKey,
           ctrlKey: event.ctrlKey,
           inputName: _keysJson2['default'][keyCode],
@@ -278,7 +928,7 @@ var InputManager = (function () {
           action: 'up'
         });
 
-        _this.evaluateSubscribers();
+        _this2.evaluateSubscribers();
       });
 
       window.addEventListener('mousedown', function (event) {
@@ -300,9 +950,9 @@ var InputManager = (function () {
           eventAttrs.canvasY = event.offsetY;
         }
 
-        _this.history.record(eventAttrs);
+        _this2.history.record(eventAttrs);
 
-        _this.evaluateSubscribers();
+        _this2.evaluateSubscribers();
       });
 
       window.addEventListener('mouseup', function (event) {
@@ -324,9 +974,9 @@ var InputManager = (function () {
           eventAttrs.canvasY = event.offsetY;
         }
 
-        _this.history.record(eventAttrs);
+        _this2.history.record(eventAttrs);
 
-        _this.evaluateSubscribers();
+        _this2.evaluateSubscribers();
       });
     }
   }]);
@@ -334,8 +984,19 @@ var InputManager = (function () {
   return InputManager;
 })();
 
+InputManager.conditions = {
+  Sequence: _libConditionsSequence2['default'],
+  Down: _libConditionsDown2['default'],
+  Up: _libConditionsUp2['default'],
+  Press: _libConditionsPress2['default'],
+  Hold: _libConditionsHold2['default'],
+  Holding: _libConditionsHolding2['default'],
+  Simultaneous: _libConditionsSimultaneous2['default'],
+  Wait: _libConditionsWait2['default']
+};
+
 exports['default'] = InputManager;
 module.exports = exports['default'];
 
-},{"./keys.json":1,"./lib/history":2,"./lib/subscriber":3}]},{},[4])(4)
+},{"./keys.json":1,"./lib/conditions/down":3,"./lib/conditions/hold":4,"./lib/conditions/holding":5,"./lib/conditions/press":6,"./lib/conditions/sequence":7,"./lib/conditions/simultaneous":8,"./lib/conditions/up":9,"./lib/conditions/wait":10,"./lib/history":11,"./lib/subscriber":12}]},{},[13])(13)
 });

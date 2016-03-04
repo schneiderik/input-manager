@@ -22,8 +22,10 @@
         ], {
           threshold: 50
         }),
-        new conditions.Hold('M', 500),
-        new conditions.Holding('M', new conditions.Press('N'))
+        /* new conditions.Holding('M', new conditions.Sequence([ */
+        /*   new conditions.Wait(500), */
+        /*   new conditions.Press('N') */
+        /* ]) */
       ], {
         within: 5000
       });
@@ -37,36 +39,36 @@
         new conditions.Press('RIGHT'),
         new conditions.Press('LEFT'),
         new conditions.Press('RIGHT'),
-        new conditions.Press('A'),
         new conditions.Press('B'),
+        new conditions.Press('A'),
         new conditions.Press('ENTER')
       ], {
         within: 7000
       });
 
-      var upperCutCondition = new conditions.Sequence([
-        new conditions.Holding('DOWN', new conditions.Down('LEFT')),
-        new conditions.Holding('LEFT', new conditions.up('DOWN')),
-        new conditions.Press('A')
-      ], {
-        within: 1500
-      });
+      /* var upperCutCondition = new conditions.Sequence([ */
+      /*   new conditions.Holding('DOWN', new conditions.Down('LEFT')), */
+      /*   new conditions.Holding('LEFT', new conditions.Up('DOWN')), */
+      /*   new conditions.Press('A') */
+      /* ], { */
+      /*   within: 1500 */
+      /* }); */
 
-      var crazyCallback = function () {
+      var crazyCallback = function (events) {
         console.log('GOT IT!', events);
       };
 
-      var konamiCallback = function () {
+      var konamiCallback = function (events) {
         console.log('INFINITE LIVES!', events);
       };
 
-      var uppserCutCallback = function () {
-        console.log('UPPER CUT!', events);
-      };
+      /* var upperCutCallback = function (events) { */
+      /*   console.log('UPPER CUT!', events); */
+      /* }; */
 
       var crazySequence = inputManager.createSubscriber(crazyCondition, crazyCallback);
       var konamiCode = inputManager.createSubscriber(konamiCondition, konamiCallback);
-      var upperCut = inputManager.createSubscriber(upperCutCondition, upperCutCallback);
+      /* var upperCut = inputManager.createSubscriber(upperCutCondition, upperCutCallback); */
     </script>
   </body>
 </html>

@@ -1,6 +1,14 @@
 import History from './lib/history';
 import Subscriber from './lib/subscriber';
 import keys from './keys.json';
+import Sequence from './lib/conditions/sequence';
+import Down from './lib/conditions/down';
+import Up from './lib/conditions/up';
+import Press from './lib/conditions/press';
+import Hold from './lib/conditions/hold';
+import Holding from './lib/conditions/holding';
+import Simultaneous from './lib/conditions/simultaneous';
+import Wait from './lib/conditions/wait';
 
 class InputManager {
   constructor() {
@@ -13,7 +21,7 @@ class InputManager {
 
   evaluateSubscribers() {
     this.subscribers.forEach((subscriber) => {
-      subscriber.evaluate();
+      subscriber.evaluate(this.history.events);
     });
   }
 
@@ -113,5 +121,16 @@ class InputManager {
     });
   }
 }
+
+InputManager.conditions = {
+  Sequence: Sequence,
+  Down: Down,
+  Up: Up,
+  Press: Press,
+  Hold: Hold,
+  Holding: Holding,
+  Simultaneous: Simultaneous,
+  Wait: Wait
+};
 
 export default InputManager;
