@@ -128,6 +128,21 @@ var Condition = (function () {
         }
       });
     }
+  }, {
+    key: "sortEventsByIndex",
+    value: function sortEventsByIndex(events) {
+      return events.sort(function (a, b) {
+        if (a.index > b.index) {
+          return -1;
+        }
+
+        if (a.index < b.index) {
+          return 1;
+        }
+
+        return 0;
+      });
+    }
   }]);
 
   return Condition;
@@ -137,69 +152,6 @@ exports["default"] = Condition;
 module.exports = exports["default"];
 
 },{}],3:[function(require,module,exports){
-'use strict';
-
-Object.defineProperty(exports, '__esModule', {
-  value: true
-});
-
-var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-
-var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var _condition = require('../condition');
-
-var _condition2 = _interopRequireDefault(_condition);
-
-var Down = (function (_Condition) {
-  _inherits(Down, _Condition);
-
-  function Down(inputName) {
-    _classCallCheck(this, Down);
-
-    _get(Object.getPrototypeOf(Down.prototype), 'constructor', this).call(this);
-
-    this.inputName = inputName;
-  }
-
-  _createClass(Down, [{
-    key: 'evaluate',
-    value: function evaluate(events) {
-      var _this = this;
-
-      this.matchedEvents = [];
-      this.isValid = false;
-
-      var event = events.find(function (event, index) {
-        if (event.inputName === _this.inputName && event.action === 'down') {
-          return event;
-        }
-      });
-
-      if (event) {
-        this.firstEvent = event;
-        this.lastEvent = event;
-        this.matchedEvents.push(event);
-        this.isValid = true;
-      }
-
-      return this.isValid;
-    }
-  }]);
-
-  return Down;
-})(_condition2['default']);
-
-exports['default'] = Down;
-module.exports = exports['default'];
-
-},{"../condition":2}],4:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -233,7 +185,7 @@ var Hold = (function (_Condition) {
 exports['default'] = Hold;
 module.exports = exports['default'];
 
-},{"../condition":2}],5:[function(require,module,exports){
+},{"../condition":2}],4:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -313,6 +265,68 @@ var Holding = (function (_Condition) {
 exports['default'] = Holding;
 module.exports = exports['default'];
 
+},{"../condition":2}],5:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var _condition = require('../condition');
+
+var _condition2 = _interopRequireDefault(_condition);
+
+var Keydown = (function (_Condition) {
+  _inherits(Keydown, _Condition);
+
+  function Keydown(inputName, callback) {
+    _classCallCheck(this, Keydown);
+
+    _get(Object.getPrototypeOf(Keydown.prototype), 'constructor', this).call(this);
+
+    this.inputName = inputName;
+    this.callback = callback;
+  }
+
+  _createClass(Keydown, [{
+    key: 'evaluate',
+    value: function evaluate(events) {
+      var event = undefined;
+
+      this.matchedEvents = [];
+
+      if (events[0].inputName === this.inputName && events[0].type === 'keydown') {
+        event = events[0];
+      }
+
+      if (event && !event.repeat) {
+        this.matchedEvents.push(event);
+
+        if (this.callback) {
+          this.callback(this.matchedEvents);
+        }
+      }
+
+      return this.matchedEvents.length;
+    }
+  }]);
+
+  return Keydown;
+})(_condition2['default']);
+
+exports['default'] = Keydown;
+module.exports = exports['default'];
+
 },{"../condition":2}],6:[function(require,module,exports){
 'use strict';
 
@@ -334,66 +348,45 @@ var _condition = require('../condition');
 
 var _condition2 = _interopRequireDefault(_condition);
 
-var Press = (function (_Condition) {
-  _inherits(Press, _Condition);
+var Keyup = (function (_Condition) {
+  _inherits(Keyup, _Condition);
 
-  function Press(inputName) {
-    _classCallCheck(this, Press);
+  function Keyup(inputName, callback) {
+    _classCallCheck(this, Keyup);
 
-    _get(Object.getPrototypeOf(Press.prototype), 'constructor', this).call(this);
+    _get(Object.getPrototypeOf(Keyup.prototype), 'constructor', this).call(this);
 
     this.inputName = inputName;
+    this.callback = callback;
   }
 
-  _createClass(Press, [{
+  _createClass(Keyup, [{
     key: 'evaluate',
     value: function evaluate(events) {
-      var pressEvents = this.getEvents(events);
+      var event = undefined;
 
-      if (pressEvents.up && pressEvents.down) {
-        this.firstEvent = pressEvents.down;
-        this.lastEvent = pressEvents.up;
-        this.matchedEvents = [pressEvents.down, pressEvents.up];
-        this.isValid = true;
-      } else {
-        this.isValid = false;
+      this.matchedEvents = [];
+
+      if (events[0].inputName === this.inputName && events[0].type === 'keyup') {
+        event = events[0];
       }
 
-      return this.isValid;
-    }
-  }, {
-    key: 'getEvents',
-    value: function getEvents(events) {
-      var _this = this;
+      if (event) {
+        this.matchedEvents.push(event);
 
-      var upIndex = undefined,
-          scopedEvents = undefined;
-      var pressEvents = {};
-
-      if (events[0].inputName === this.inputName && events[0].action === 'up') {
-        pressEvents.up = events[0];
-      }
-
-      if (!pressEvents.up) {
-        return pressEvents;
-      }
-
-      scopedEvents = this.getEventsBefore(events, pressEvents.up.timeStamp);
-
-      pressEvents.down = scopedEvents.find(function (event) {
-        if (event.inputName === _this.inputName && event.action === 'down') {
-          return event;
+        if (this.callback) {
+          this.callback(this.matchedEvents);
         }
-      });
+      }
 
-      return pressEvents;
+      return this.matchedEvents.length;
     }
   }]);
 
-  return Press;
+  return Keyup;
 })(_condition2['default']);
 
-exports['default'] = Press;
+exports['default'] = Keyup;
 module.exports = exports['default'];
 
 },{"../condition":2}],7:[function(require,module,exports){
@@ -420,56 +413,87 @@ var _condition2 = _interopRequireDefault(_condition);
 var Sequence = (function (_Condition) {
   _inherits(Sequence, _Condition);
 
-  function Sequence(conditions, options) {
+  function Sequence(conditions, callback, options) {
     _classCallCheck(this, Sequence);
 
     _get(Object.getPrototypeOf(Sequence.prototype), 'constructor', this).call(this);
 
-    this.conditions = conditions.reverse();
-    this.options = options || {};
+    this.conditions = conditions;
+
+    if (this.isPlainObject(callback) && options == null) {
+      this.callback = null;
+      this.options = callback || {};
+    } else {
+      this.callback = callback;
+      this.options = options || {};
+    }
+
+    this.currentIndex = 0;
+    this.matchedEvents = [];
+    this.firstEvent = null;
   }
 
   _createClass(Sequence, [{
     key: 'evaluate',
     value: function evaluate(events) {
-      var i = 0;
+      var condition = undefined;
 
-      this.matchedEvents = [];
-
-      function checkConditionInSequence(condition, e) {
-        if (condition.evaluate(e)) {
-          this.matchedEvents.concat(condition.matchedEvents);
-
-          if (i === 0) {
-            this.lastEvent = condition.lastEvent;
-          }
-
-          i++;
-
-          if (i === this.conditions.length) {
-            this.firstEvent = condition.firstEvent;
-
-            // Check that sequence was performed within time limit
-            if (this.options.within && this.lastEvent.timeStamp - this.firstEvent.timeStamp > this.options.within) {
-              this.isValid = false;
-              return;
-            }
-
-            this.isValid = true;
-          } else {
-            checkConditionInSequence.call(this, this.conditions[i], this.getEventsBefore(e, condition.firstEvent.timeStamp));
-          }
-        } else {
-          this.isValid = false;
-          return;
-        }
+      if (this.isValid) {
+        this.reset();
       }
 
-      checkConditionInSequence.call(this, this.conditions[i], events);
+      condition = this.conditions[this.currentIndex];
 
-      console.log('SEQUENCE VALID', this.isValid);
+      if (condition.evaluate(events)) {
+        if (this.currentIndex === 0) {
+          this.firstEvent = events[0];
+        }
+
+        if (!this.withinTimeLimit(events[0])) {
+          this.reset();
+          return;
+        }
+
+        this.matchedEvents.concat(condition.matchedEvents);
+        this.currentIndex++;
+
+        if (this.currentIndex === this.conditions.length) {
+          if (this.callback) {
+            this.callback(this.matchedEvents);
+          }
+
+          this.isValid = true;
+        }
+      } else {
+        if (condition.constructor.name === 'Keydown' && events[0].type === 'keyup') {
+          return;
+        }
+
+        if (condition.constructor.name === 'Keyup' && events[0].type === 'keydown') {
+          return;
+        }
+
+        this.reset();
+      }
 
       return this.isValid;
+    }
+  }, {
+    key: 'reset',
+    value: function reset() {
+      this.isValid = false;
+      this.matchedEvents = [];
+      this.currentIndex = 0;
+    }
+  }, {
+    key: 'withinTimeLimit',
+    value: function withinTimeLimit(event) {
+      return this.firstEvent && this.options.within && event.timestamp - this.firstEvent.timestamp < this.options.within;
+    }
+  }, {
+    key: 'isPlainObject',
+    value: function isPlainObject(x) {
+      return Object.prototype.toString.call(x) === '[object Object]';
     }
   }]);
 
@@ -613,69 +637,6 @@ Object.defineProperty(exports, '__esModule', {
   value: true
 });
 
-var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-
-var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var _condition = require('../condition');
-
-var _condition2 = _interopRequireDefault(_condition);
-
-var Up = (function (_Condition) {
-  _inherits(Up, _Condition);
-
-  function Up(inputName) {
-    _classCallCheck(this, Up);
-
-    _get(Object.getPrototypeOf(Up.prototype), 'constructor', this).call(this);
-
-    this.inputName = inputName;
-  }
-
-  _createClass(Up, [{
-    key: 'evaluate',
-    value: function evaluate(events) {
-      var _this = this;
-
-      this.matchedEvents = [];
-      this.isValid = false;
-
-      var event = events.find(function (event, index) {
-        if (event.inputName === _this.inputName && event.action === 'up') {
-          return event;
-        }
-      });
-
-      if (event) {
-        this.firstEvent = event;
-        this.lastEvent = event;
-        this.matchedEvents.push(event);
-        this.isValid = true;
-      }
-
-      return this.isValid;
-    }
-  }]);
-
-  return Up;
-})(_condition2['default']);
-
-exports['default'] = Up;
-module.exports = exports['default'];
-
-},{"../condition":2}],10:[function(require,module,exports){
-'use strict';
-
-Object.defineProperty(exports, '__esModule', {
-  value: true
-});
-
 var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
@@ -703,7 +664,7 @@ var Wait = (function (_Condition) {
 exports['default'] = Wait;
 module.exports = exports['default'];
 
-},{"../condition":2}],11:[function(require,module,exports){
+},{"../condition":2}],10:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -751,58 +712,7 @@ var History = (function () {
 exports['default'] = History;
 module.exports = exports['default'];
 
-},{"../keys.json":1}],12:[function(require,module,exports){
-'use strict';
-
-Object.defineProperty(exports, '__esModule', {
-  value: true
-});
-
-var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
-
-var Subscriber = (function () {
-  function Subscriber(condition, callback) {
-    _classCallCheck(this, Subscriber);
-
-    this.condition = condition;
-    this.callback = callback;
-  }
-
-  _createClass(Subscriber, [{
-    key: 'evaluate',
-    value: function evaluate(events) {
-      if (this.condition.evaluate(events)) {
-        console.log('SUBSCRIBER VALID', this.condition.isValid);
-
-        this.callback(this.sortEventsByIndex(this.condition.matchedEvents));
-      }
-    }
-  }, {
-    key: 'sortEventsByIndex',
-    value: function sortEventsByIndex(events) {
-      return events.sort(function (a, b) {
-        if (a.index > b.index) {
-          return -1;
-        }
-
-        if (a.index < b.index) {
-          return 1;
-        }
-
-        return 0;
-      });
-    }
-  }]);
-
-  return Subscriber;
-})();
-
-exports['default'] = Subscriber;
-module.exports = exports['default'];
-
-},{}],13:[function(require,module,exports){
+},{"../keys.json":1}],11:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -819,29 +729,21 @@ var _libHistory = require('./lib/history');
 
 var _libHistory2 = _interopRequireDefault(_libHistory);
 
-var _libSubscriber = require('./lib/subscriber');
+var _keycode = require('keycode');
 
-var _libSubscriber2 = _interopRequireDefault(_libSubscriber);
-
-var _keysJson = require('./keys.json');
-
-var _keysJson2 = _interopRequireDefault(_keysJson);
+var _keycode2 = _interopRequireDefault(_keycode);
 
 var _libConditionsSequence = require('./lib/conditions/sequence');
 
 var _libConditionsSequence2 = _interopRequireDefault(_libConditionsSequence);
 
-var _libConditionsDown = require('./lib/conditions/down');
+var _libConditionsKeydown = require('./lib/conditions/keydown');
 
-var _libConditionsDown2 = _interopRequireDefault(_libConditionsDown);
+var _libConditionsKeydown2 = _interopRequireDefault(_libConditionsKeydown);
 
-var _libConditionsUp = require('./lib/conditions/up');
+var _libConditionsKeyup = require('./lib/conditions/keyup');
 
-var _libConditionsUp2 = _interopRequireDefault(_libConditionsUp);
-
-var _libConditionsPress = require('./lib/conditions/press');
-
-var _libConditionsPress2 = _interopRequireDefault(_libConditionsPress);
+var _libConditionsKeyup2 = _interopRequireDefault(_libConditionsKeyup);
 
 var _libConditionsHold = require('./lib/conditions/hold');
 
@@ -863,30 +765,27 @@ var InputManager = (function () {
   function InputManager() {
     _classCallCheck(this, InputManager);
 
-    this.Subscriber = _libSubscriber2['default'];
-    this.subscribers = [];
+    this.conditions = [];
     this.history = new _libHistory2['default']();
 
     this.bindEvents();
   }
 
   _createClass(InputManager, [{
-    key: 'evaluateSubscribers',
-    value: function evaluateSubscribers() {
+    key: 'evaluateConditions',
+    value: function evaluateConditions() {
       var _this = this;
 
-      this.subscribers.forEach(function (subscriber) {
-        subscriber.evaluate(_this.history.events);
+      this.conditions.forEach(function (condition) {
+        condition.evaluate(_this.history.events);
       });
     }
   }, {
-    key: 'createSubscriber',
-    value: function createSubscriber(condition, callback) {
-      var subscriber = new _libSubscriber2['default'](condition, callback);
+    key: 'register',
+    value: function register(condition) {
+      this.conditions.push(condition);
 
-      this.subscribers.push(subscriber);
-
-      return subscriber;
+      return condition;
     }
   }, {
     key: 'bindEvents',
@@ -894,90 +793,88 @@ var InputManager = (function () {
       var _this2 = this;
 
       window.addEventListener('keydown', function (event) {
-        var keyCode = event.keyCode || event.key;
+        var keyName = (0, _keycode2['default'])(event);
 
         _this2.history.record({
           altKey: event.altKey,
           ctrlKey: event.ctrlKey,
-          inputName: _keysJson2['default'][keyCode],
-          inputAlias: keyCode,
+          inputName: keyName,
+          inputNumber: (0, _keycode2['default'])(keyName),
           metaKey: event.metaKey,
           repeat: event.repeat,
           shiftKey: event.shiftKey,
-          timeStamp: new Date(event.timeStamp),
-          type: event.type,
-          action: 'down'
+          timestamp: new Date(event.timeStamp),
+          type: event.type
         });
 
-        _this2.evaluateSubscribers();
+        _this2.evaluateConditions();
       });
 
       window.addEventListener('keyup', function (event) {
-        var keyCode = event.keyCode || event.key;
+        var keyName = (0, _keycode2['default'])(event);
 
         _this2.history.record({
           altKey: event.altKey,
           ctrlKey: event.ctrlKey,
-          inputName: _keysJson2['default'][keyCode],
-          inputAlias: keyCode,
+          inputName: keyName,
+          inputNumber: (0, _keycode2['default'])(keyName),
           metaKey: event.metaKey,
           repeat: event.repeat,
           shiftKey: event.shiftKey,
-          timeStamp: new Date(event.timeStamp),
-          type: event.type,
-          action: 'up'
+          timestamp: new Date(event.timeStamp),
+          type: event.type
         });
 
-        _this2.evaluateSubscribers();
+        _this2.evaluateConditions();
       });
 
-      window.addEventListener('mousedown', function (event) {
-        var eventAttrs = {
-          altKey: event.altKey,
-          ctrlKey: event.ctrlKey,
-          inputName: 'MOUSE' + event.button,
-          metaKey: event.metaKey,
-          shiftKey: event.shiftKey,
-          timeStamp: new Date(event.timeStamp),
-          x: event.x,
-          y: event.y,
-          type: event.type,
-          action: 'down'
-        };
+      // window.addEventListener('mousedown', (event) => {
+      //   let eventAttrs = {
+      //     altKey: event.altKey,
+      //     ctrlKey: event.ctrlKey,
+      //     inputName: 'MOUSE' + event.button,
+      //     metaKey: event.metaKey,
+      //     shiftKey: event.shiftKey,
+      //     timeStamp: new Date(event.timeStamp),
+      //     x: event.x,
+      //     y: event.y,
+      //     type: event.type,
+      //     action: 'down'
+      //   };
 
-        if (event.target && event.target.tagName === 'CANVAS') {
-          eventAttrs.canvasX = event.offsetX;
-          eventAttrs.canvasY = event.offsetY;
-        }
+      //   if (event.target && event.target.tagName === 'CANVAS') {
+      //     eventAttrs.canvasX = event.offsetX;
+      //     eventAttrs.canvasY = event.offsetY;
+      //   }
 
-        _this2.history.record(eventAttrs);
+      //   this.history.record(eventAttrs);
 
-        _this2.evaluateSubscribers();
-      });
+      //   this.evaluateSubscribers();
+      // });
 
-      window.addEventListener('mouseup', function (event) {
-        var eventAttrs = {
-          altKey: event.altKey,
-          ctrlKey: event.ctrlKey,
-          inputName: 'MOUSE' + event.button,
-          metaKey: event.metaKey,
-          shiftKey: event.shiftKey,
-          timeStamp: new Date(event.timeStamp),
-          x: event.x,
-          y: event.y,
-          type: event.type,
-          action: 'up'
-        };
+      // window.addEventListener('mouseup', (event) => {
+      //   let eventAttrs = {
+      //     altKey: event.altKey,
+      //     ctrlKey: event.ctrlKey,
+      //     inputName: 'MOUSE' + event.button,
+      //     metaKey: event.metaKey,
+      //     shiftKey: event.shiftKey,
+      //     timeStamp: new Date(event.timeStamp),
+      //     x: event.x,
+      //     y: event.y,
+      //     type: event.type,
+      //     action: 'up'
+      //   };
 
-        if (event.target && event.target.tagName === 'CANVAS') {
-          eventAttrs.canvasX = event.offsetX;
-          eventAttrs.canvasY = event.offsetY;
-        }
+      //   if (event.target && event.target.tagName === 'CANVAS') {
+      //     eventAttrs.canvasX = event.offsetX;
+      //     eventAttrs.canvasY = event.offsetY;
+      //   }
 
-        _this2.history.record(eventAttrs);
+      //   this.history.record(eventAttrs);
 
-        _this2.evaluateSubscribers();
-      });
+      //   this.evaluateSubscribers();
+      // });
     }
   }]);
 
@@ -986,9 +883,8 @@ var InputManager = (function () {
 
 InputManager.conditions = {
   Sequence: _libConditionsSequence2['default'],
-  Down: _libConditionsDown2['default'],
-  Up: _libConditionsUp2['default'],
-  Press: _libConditionsPress2['default'],
+  Keydown: _libConditionsKeydown2['default'],
+  Keyup: _libConditionsKeyup2['default'],
   Hold: _libConditionsHold2['default'],
   Holding: _libConditionsHolding2['default'],
   Simultaneous: _libConditionsSimultaneous2['default'],
@@ -998,5 +894,152 @@ InputManager.conditions = {
 exports['default'] = InputManager;
 module.exports = exports['default'];
 
-},{"./keys.json":1,"./lib/conditions/down":3,"./lib/conditions/hold":4,"./lib/conditions/holding":5,"./lib/conditions/press":6,"./lib/conditions/sequence":7,"./lib/conditions/simultaneous":8,"./lib/conditions/up":9,"./lib/conditions/wait":10,"./lib/history":11,"./lib/subscriber":12}]},{},[13])(13)
+},{"./lib/conditions/hold":3,"./lib/conditions/holding":4,"./lib/conditions/keydown":5,"./lib/conditions/keyup":6,"./lib/conditions/sequence":7,"./lib/conditions/simultaneous":8,"./lib/conditions/wait":9,"./lib/history":10,"keycode":12}],12:[function(require,module,exports){
+// Source: http://jsfiddle.net/vWx8V/
+// http://stackoverflow.com/questions/5603195/full-list-of-javascript-keycodes
+
+/**
+ * Conenience method returns corresponding value for given keyName or keyCode.
+ *
+ * @param {Mixed} keyCode {Number} or keyName {String}
+ * @return {Mixed}
+ * @api public
+ */
+
+exports = module.exports = function(searchInput) {
+  // Keyboard Events
+  if (searchInput && 'object' === typeof searchInput) {
+    var hasKeyCode = searchInput.which || searchInput.keyCode || searchInput.charCode
+    if (hasKeyCode) searchInput = hasKeyCode
+  }
+
+  // Numbers
+  if ('number' === typeof searchInput) return names[searchInput]
+
+  // Everything else (cast to string)
+  var search = String(searchInput)
+
+  // check codes
+  var foundNamedKey = codes[search.toLowerCase()]
+  if (foundNamedKey) return foundNamedKey
+
+  // check aliases
+  var foundNamedKey = aliases[search.toLowerCase()]
+  if (foundNamedKey) return foundNamedKey
+
+  // weird character?
+  if (search.length === 1) return search.charCodeAt(0)
+
+  return undefined
+}
+
+/**
+ * Get by name
+ *
+ *   exports.code['enter'] // => 13
+ */
+
+var codes = exports.code = exports.codes = {
+  'backspace': 8,
+  'tab': 9,
+  'enter': 13,
+  'shift': 16,
+  'ctrl': 17,
+  'alt': 18,
+  'pause/break': 19,
+  'caps lock': 20,
+  'esc': 27,
+  'space': 32,
+  'page up': 33,
+  'page down': 34,
+  'end': 35,
+  'home': 36,
+  'left': 37,
+  'up': 38,
+  'right': 39,
+  'down': 40,
+  'insert': 45,
+  'delete': 46,
+  'command': 91,
+  'right click': 93,
+  'numpad *': 106,
+  'numpad +': 107,
+  'numpad -': 109,
+  'numpad .': 110,
+  'numpad /': 111,
+  'num lock': 144,
+  'scroll lock': 145,
+  'my computer': 182,
+  'my calculator': 183,
+  ';': 186,
+  '=': 187,
+  ',': 188,
+  '-': 189,
+  '.': 190,
+  '/': 191,
+  '`': 192,
+  '[': 219,
+  '\\': 220,
+  ']': 221,
+  "'": 222
+}
+
+// Helper aliases
+
+var aliases = exports.aliases = {
+  'windows': 91,
+  '⇧': 16,
+  '⌥': 18,
+  '⌃': 17,
+  '⌘': 91,
+  'ctl': 17,
+  'control': 17,
+  'option': 18,
+  'pause': 19,
+  'break': 19,
+  'caps': 20,
+  'return': 13,
+  'escape': 27,
+  'spc': 32,
+  'pgup': 33,
+  'pgdn': 33,
+  'ins': 45,
+  'del': 46,
+  'cmd': 91
+}
+
+
+/*!
+ * Programatically add the following
+ */
+
+// lower case chars
+for (i = 97; i < 123; i++) codes[String.fromCharCode(i)] = i - 32
+
+// numbers
+for (var i = 48; i < 58; i++) codes[i - 48] = i
+
+// function keys
+for (i = 1; i < 13; i++) codes['f'+i] = i + 111
+
+// numpad keys
+for (i = 0; i < 10; i++) codes['numpad '+i] = i + 96
+
+/**
+ * Get by code
+ *
+ *   exports.name[13] // => 'Enter'
+ */
+
+var names = exports.names = exports.title = {} // title for backward compat
+
+// Create reverse mapping
+for (i in codes) names[codes[i]] = i
+
+// Add aliases
+for (var alias in aliases) {
+  codes[alias] = aliases[alias]
+}
+
+},{}]},{},[11])(11)
 });

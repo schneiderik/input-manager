@@ -8,66 +8,72 @@
       var inputManager = new InputManager;
       var conditions = InputManager.conditions;
 
-      var crazyCondition = new conditions.Sequence([
-        new conditions.Sequence([
-          new conditions.Press('Z'),
-          new conditions.Press('X'),
-          new conditions.Press('C')
-        ], {
-          within: 2000
-        }),
-        new conditions.Simultaneous([
-          new conditions.Press('V'),
-          new conditions.Press('B')
-        ], {
-          threshold: 50
-        }),
-        /* new conditions.Holding('M', new conditions.Sequence([ */
-        /*   new conditions.Wait(500), */
-        /*   new conditions.Press('N') */
-        /* ]) */
-      ], {
+      /* var crazyCondition = new conditions.Sequence([ */
+      /*   new conditions.Sequence([ */
+      /*     new conditions.Press('Z'), */
+      /*     new conditions.Press('X'), */
+      /*     new conditions.Press('C') */
+      /*   ], { */
+      /*     within: 2000 */
+      /*   }), */
+      /*   new conditions.Simultaneous([ */
+      /*     new conditions.Press('V'), */
+      /*     new conditions.Press('B') */
+      /*   ], { */
+      /*     threshold: 50 */
+      /*   }), */
+      /*   new conditions.Holding('M', new conditions.Sequence([ */
+      /*     new conditions.Wait(500), */
+      /*     new conditions.Press('N') */
+      /*   ]) */
+      /* ], { */
+      /*   within: 5000 */
+      /* }); */
+
+      var conditionCallback = function (events) {
+        console.log('part of sequence', events);
+      };
+
+      var konamiCondition = new conditions.Sequence([
+        new conditions.Keydown('up', conditionCallback),
+        new conditions.Keydown('up', conditionCallback),
+        new conditions.Keydown('down', conditionCallback),
+        new conditions.Keydown('down', conditionCallback),
+        new conditions.Keydown('left', conditionCallback),
+        new conditions.Keydown('right', conditionCallback),
+        new conditions.Keydown('left', conditionCallback),
+        new conditions.Keydown('right', conditionCallback),
+        new conditions.Keydown('b', conditionCallback),
+        new conditions.Keydown('a', conditionCallback),
+        new conditions.Keydown('enter', conditionCallback)
+      ], function (events) {
+        console.log('INFINITE LIVES!', events);
+      }, {
         within: 5000
       });
 
-      var konamiCondition = new conditions.Sequence([
-        new conditions.Press('UP'),
-        new conditions.Press('UP'),
-        new conditions.Press('DOWN'),
-        new conditions.Press('DOWN'),
-        new conditions.Press('LEFT'),
-        new conditions.Press('RIGHT'),
-        new conditions.Press('LEFT'),
-        new conditions.Press('RIGHT'),
-        new conditions.Press('B'),
-        new conditions.Press('A'),
-        new conditions.Press('ENTER')
-      ], {
-        within: 7000
-      });
-
       /* var upperCutCondition = new conditions.Sequence([ */
-      /*   new conditions.Holding('DOWN', new conditions.Down('LEFT')), */
-      /*   new conditions.Holding('LEFT', new conditions.Up('DOWN')), */
-      /*   new conditions.Press('A') */
-      /* ], { */
+      /*   new conditions.Holding('down', new conditions.Keydown('left')), */
+      /*   new conditions.Holding('left', new conditions.Keyup('down')), */
+      /*   new conditions.Keydown('a') */
+      /* ], function (events) { */
+      /*   console.log('UPPER CUT!', events); */
+      /* }, { */
       /*   within: 1500 */
       /* }); */
 
-      var crazyCallback = function (events) {
-        console.log('GOT IT!', events);
-      };
+      inputManager.register(konamiCondition);
+      /* inputManager.register(upperCutCondition); */
 
-      var konamiCallback = function (events) {
-        console.log('INFINITE LIVES!', events);
-      };
+      /* var crazyCallback = function (events) { */
+      /*   console.log('GOT IT!', events); */
+      /* }; */
 
       /* var upperCutCallback = function (events) { */
       /*   console.log('UPPER CUT!', events); */
       /* }; */
 
-      var crazySequence = inputManager.createSubscriber(crazyCondition, crazyCallback);
-      var konamiCode = inputManager.createSubscriber(konamiCondition, konamiCallback);
+      /* var crazySequence = inputManager.createSubscriber(crazyCondition, crazyCallback); */
       /* var upperCut = inputManager.createSubscriber(upperCutCondition, upperCutCallback); */
     </script>
   </body>

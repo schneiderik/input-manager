@@ -1,10 +1,8 @@
 import History from './lib/history';
-import Subscriber from './lib/subscriber';
-import keys from './keys.json';
+import keycode from 'keycode';
 import Sequence from './lib/conditions/sequence';
-import Down from './lib/conditions/down';
-import Up from './lib/conditions/up';
-import Press from './lib/conditions/press';
+import Keydown from './lib/conditions/keydown';
+import Keyup from './lib/conditions/keyup';
 import Hold from './lib/conditions/hold';
 import Holding from './lib/conditions/holding';
 import Simultaneous from './lib/conditions/simultaneous';
@@ -12,121 +10,115 @@ import Wait from './lib/conditions/wait';
 
 class InputManager {
   constructor() {
-    this.Subscriber = Subscriber;
-    this.subscribers = [];
+    this.conditions = [];
     this.history =  new History();
 
     this.bindEvents();
   }
 
-  evaluateSubscribers() {
-    this.subscribers.forEach((subscriber) => {
-      subscriber.evaluate(this.history.events);
+  evaluateConditions() {
+    this.conditions.forEach((condition) => {
+      condition.evaluate(this.history.events);
     });
   }
 
-  createSubscriber(condition, callback) {
-    let subscriber = new Subscriber(condition, callback);
+  register(condition) {
+    this.conditions.push(condition);
 
-    this.subscribers.push(subscriber);
-
-    return subscriber;
+    return condition;
   }
 
   bindEvents() {
     window.addEventListener('keydown', (event) => {
-      let keyCode = event.keyCode || event.key;
+      let keyName = keycode(event);
 
       this.history.record({
         altKey: event.altKey,
         ctrlKey: event.ctrlKey,
-        inputName: keys[keyCode],
-        inputAlias: keyCode,
+        inputName: keyName,
+        inputNumber: keycode(keyName),
         metaKey: event.metaKey,
         repeat: event.repeat,
         shiftKey: event.shiftKey,
-        timeStamp: new Date(event.timeStamp),
+        timestamp: new Date(event.timeStamp),
         type: event.type,
-        action: 'down'
       });
 
-      this.evaluateSubscribers();
+      this.evaluateConditions();
     });
 
     window.addEventListener('keyup', (event) => {
-      let keyCode = event.keyCode || event.key;
+      let keyName = keycode(event);
 
       this.history.record({
         altKey: event.altKey,
         ctrlKey: event.ctrlKey,
-        inputName: keys[keyCode],
-        inputAlias: keyCode,
+        inputName: keyName,
+        inputNumber: keycode(keyName),
         metaKey: event.metaKey,
         repeat: event.repeat,
         shiftKey: event.shiftKey,
-        timeStamp: new Date(event.timeStamp),
+        timestamp: new Date(event.timeStamp),
         type: event.type,
-        action: 'up'
       });
 
-      this.evaluateSubscribers();
+      this.evaluateConditions();
     });
 
-    window.addEventListener('mousedown', (event) => {
-      let eventAttrs = {
-        altKey: event.altKey,
-        ctrlKey: event.ctrlKey,
-        inputName: 'MOUSE' + event.button,
-        metaKey: event.metaKey,
-        shiftKey: event.shiftKey,
-        timeStamp: new Date(event.timeStamp),
-        x: event.x,
-        y: event.y,
-        type: event.type,
-        action: 'down'
-      };
+    // window.addEventListener('mousedown', (event) => {
+    //   let eventAttrs = {
+    //     altKey: event.altKey,
+    //     ctrlKey: event.ctrlKey,
+    //     inputName: 'MOUSE' + event.button,
+    //     metaKey: event.metaKey,
+    //     shiftKey: event.shiftKey,
+    //     timeStamp: new Date(event.timeStamp),
+    //     x: event.x,
+    //     y: event.y,
+    //     type: event.type,
+    //     action: 'down'
+    //   };
 
-      if (event.target && event.target.tagName === 'CANVAS') {
-        eventAttrs.canvasX = event.offsetX;
-        eventAttrs.canvasY = event.offsetY;
-      }
+    //   if (event.target && event.target.tagName === 'CANVAS') {
+    //     eventAttrs.canvasX = event.offsetX;
+    //     eventAttrs.canvasY = event.offsetY;
+    //   }
 
-      this.history.record(eventAttrs);
+    //   this.history.record(eventAttrs);
 
-      this.evaluateSubscribers();
-    });
+    //   this.evaluateSubscribers();
+    // });
 
-    window.addEventListener('mouseup', (event) => {
-      let eventAttrs = {
-        altKey: event.altKey,
-        ctrlKey: event.ctrlKey,
-        inputName: 'MOUSE' + event.button,
-        metaKey: event.metaKey,
-        shiftKey: event.shiftKey,
-        timeStamp: new Date(event.timeStamp),
-        x: event.x,
-        y: event.y,
-        type: event.type,
-        action: 'up'
-      };
+    // window.addEventListener('mouseup', (event) => {
+    //   let eventAttrs = {
+    //     altKey: event.altKey,
+    //     ctrlKey: event.ctrlKey,
+    //     inputName: 'MOUSE' + event.button,
+    //     metaKey: event.metaKey,
+    //     shiftKey: event.shiftKey,
+    //     timeStamp: new Date(event.timeStamp),
+    //     x: event.x,
+    //     y: event.y,
+    //     type: event.type,
+    //     action: 'up'
+    //   };
 
-      if (event.target && event.target.tagName === 'CANVAS') {
-        eventAttrs.canvasX = event.offsetX;
-        eventAttrs.canvasY = event.offsetY;
-      }
+    //   if (event.target && event.target.tagName === 'CANVAS') {
+    //     eventAttrs.canvasX = event.offsetX;
+    //     eventAttrs.canvasY = event.offsetY;
+    //   }
 
-      this.history.record(eventAttrs);
+    //   this.history.record(eventAttrs);
 
-      this.evaluateSubscribers();
-    });
+    //   this.evaluateSubscribers();
+    // });
   }
 }
 
 InputManager.conditions = {
   Sequence: Sequence,
-  Down: Down,
-  Up: Up,
-  Press: Press,
+  Keydown: Keydown,
+  Keyup: Keyup,
   Hold: Hold,
   Holding: Holding,
   Simultaneous: Simultaneous,
